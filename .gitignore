@@ -1,0 +1,32 @@
+# Compiled binaries
+/target/
+*.class
+/bin/
+
+# Package files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Redundant Gradle files
+/.gradle/
+/build/
+
+# IntelliJ IDEA project files
+/.idea/
+*.iml
+
+# Eclipse project files
+/.settings/
+.classpath
+.project
+
+# Redundant Maven files
+dependency-reduced-pom.xml
+
+# Temporary and log files
+**/temp.**
+*.log
