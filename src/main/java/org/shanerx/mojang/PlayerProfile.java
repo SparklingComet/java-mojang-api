@@ -62,4 +62,32 @@ public class PlayerProfile {
 		this.username = username;
 		this.properties = properties;
 	}
+
+	/**
+	 * Gets the UUID of the player.
+	 *
+	 * @return the uuid as a {@link java.lang.String String}
+	 */
+	public String getUUID() {
+		return uuid;
+	}
+
+	/**
+	 * Gets the username of the player.
+	 *
+	 * @return the username as a {@link java.lang.String String}
+	 */
+	public String getUsername() {
+		return username;
+	}
+
+	/**
+	 * <p>Returns the properties this object has.
+	 * <p>This method exists for transparency, as the properties set is used internally.
+	 *
+	 * @return the properties {@link java.util.Set Set}
+	 */
+	public Set<Property> getProperties() {
+		return properties;
+	}
 }
