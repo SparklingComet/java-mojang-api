@@ -14,17 +14,17 @@ $    mvn clean install
 ```xml
 <project>
     <!-- Your stuff here... -->
-	<repositories>
-	    <!-- More repositories... -->
-		<repository>
-		    <id>jitpack.io</id>
-		    <url>https://jitpack.io</url>
-		</repository>
-	</repositories>
+    <repositories>
+        <!-- More repositories... -->
+	<repository>
+	    <id>jitpack.io</id>
+	    <url>https://jitpack.io</url>
+	</repository>
+    </repositories>
 	
-	<dependencies>
-		<!-- More dependencies... -->
-		<dependency>
+    <dependencies>
+	<!-- More dependencies... -->
+	<dependency>
     	    <groupId>com.github.SparklingComet</groupId>
     	    <artifactId>java-mojang-api</artifactId>
     	    <version>-SNAPSHOT</version>
@@ -35,16 +35,16 @@ $    mvn clean install
 
 * You can also use Gradle as a dependency manager:
 ```gradle
-	allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
-	}
-	
-	dependencies {
-            compile 'com.github.SparklingComet:java-mojang-api:-SNAPSHOT'
+allprojects {
+    repositories {
+	...
+	maven { url 'https://jitpack.io' }
     }
+}
+	
+dependencies {
+    compile 'com.github.SparklingComet:java-mojang-api:-SNAPSHOT'
+}
 ```
 
 * More information on using dependency managers with this repository may be found [on Jitpack](https://jitpack.io/#SparklingComet/java-mojang-api).
@@ -64,7 +64,7 @@ if (api.getStatus(Mojang.ServiceType.AUTH_MOJANG_COM != Mojang.ServiceStatus.GRE
 to check whether authentication servers are currently down.
 
 ## Documentation
-Javadocs are available for download in HTML-format in the `docs` directory.
+Javadocs are available for download in HTML-format in the `docs/` directory.
 We will make them available online soon.
 
 ## License
