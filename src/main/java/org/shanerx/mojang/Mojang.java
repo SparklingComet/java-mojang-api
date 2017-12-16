@@ -32,30 +32,77 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"unused", "unchecked"})
+/**
+ * <p>This class represents the connection with the Mojang API.
+ * <p>All instances of other classes of this wrapper API should be retrieved through this class.
+ * <p>Remember to call <code>api.connect()</code> after creating an instance of this class.
+ */
 public class Mojang {
 	
 	private Map<String, ServiceStatus> apiStatus;
-	
-	public void connect() {
+
+	/**
+	 * Constructor. Initializes member variables.
+	 */
+	public Mojang() {
+		apiStatus = new HashMap<>();
+	}
+
+	/**
+	 * <p>Opens the connection with the Mojang API.
+	 * Should <strong>always</strong> be called after creating the API object.
+	 *
+	 * <p><strong>Example:</strong>
+	 * <code>Mojang api = new Mojang().connect();</code>
+	 *
+	 * @return the api itself. Useful for concatenation.
+	 */
+	public Mojang connect() {
 		JSONObject obj = getJSONObject("https://status.mojang.com/check");
 		obj.forEach((k, v) -> apiStatus.put((String) k, ServiceStatus.valueOf((String) v)));
+		return this;
 	}
-	
+
+	/**
+	 * Retrieves the {@link org.shanerx.mojang.Mojang.ServiceStatus status} of a portion of the API.
+	 * Check the enum entries for {@link org.shanerx.mojang.Mojang.ServiceStatus} for possible response types.
+	 *
+	 * @param service the service type
+	 * @return the status of said service
+	 */
 	public ServiceStatus getStatus(ServiceType service) {
 		if (service == null) {
 			return ServiceStatus.UNKNOWN;
 		}
 		return apiStatus.get(service.toString());
 	}
-	
+
+	/**
+	 * Retrieves the current UUID linked to a username.
+	 *
+	 *  @param username the username
+	 * @return the UUID as a {@link java.lang.String String}
+	 */
 	public String getUUIDOfUsername(String username) {
 		return (String) getJSONObject("https://api.mojang.com/users/profiles/minecraft/" + username).get("id");
 	}
-	
+
+	/**
+	 * Retrieves the UUID linked to a username at a certain moment in time.
+	 *
+	 * @param username the username
+	 * @param timestamp the Java Timestamp that represents the time
+	 * @return the UUID as a {@link java.lang.String String}
+	 */
 	public String getUUIDOfUsername(String username, String timestamp) {
 		return (String) getJSONObject("https://api.mojang.com/users/profiles/minecraft/" + username + "?at=" + timestamp).get("id");
 	}
-	
+
+	/**
+	 * Retrieves all the username a certain UUID has had in the past, including the current one.
+	 * @param uuid the UUID
+	 * @return a map with the username as key value and the Timestamp as a {@link java.lang.Long Long}
+	 */
 	public Map<String, Long> getNameHistoryOfPlayer(String uuid) {
 		JSONArray arr = getJSONArray("https://api.mojang.com/user/profiles/" + uuid + "/names");
 		Map<String, Long> history = new HashMap<>();
@@ -65,7 +112,13 @@ public class Mojang {
 		});
 		return history;
 	}
-	
+
+	/**
+	 * Returns the {@link org.shanerx.mojang.PlayerProfile PlayerProfile} object which holds and represents the metadata for a certain account.
+	 *
+	 * @param uuid the UUID of the player
+	 * @return the {@link org.shanerx.mojang.PlayerProfile PlayerProfile} object}
+	 */
 	public PlayerProfile getPlayerProfile(String uuid) {
 		JSONObject obj = getJSONObject("https://sessionserver.mojang.com/session/minecraft/profile/<uuid>");
 		String name = (String) obj.get("name");
@@ -79,7 +132,16 @@ public class Mojang {
 		}).collect(Collectors.toSet());
 		return new PlayerProfile(uuid, name, properties);
 	}
-	
+
+	/**
+	 * Updates the skin of a player using a URI.
+	 * This means that the image file will <strong>not</strong> be uploaded to Mojang's servers, hence the API will need to query the given URI.
+	 *
+	 * @param uuid the UUID of said player
+	 * @param token the token used for API authentication
+	 * @param skinType the {@link org.shanerx.mojang.Mojang.SkinType type} of the skin
+	 * @param skinUrl a direct URL to the skin
+	 */
 	public void updateSkin(String uuid, String token, SkinType skinType, String skinUrl) {
 		try {
 			Unirest.post("https://api.mojang.com/user/profile/" + uuid + "/skin").header("Authorization", "Bearer " + token).field("model", skinType.toString()).field("url", skinUrl).asString();
@@ -87,7 +149,17 @@ public class Mojang {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Updates the skin of a player using a URI.
+	 * The raw skin data will be uploaded to Mojang's servers and stored there potentially forever.
+	 *
+	 * @param uuid the UUID of said player
+	 * @param token the token used for API authentication
+	 * @param skinType the {@link org.shanerx.mojang.Mojang.SkinType type} of the skin
+	 * @param file the raw image data
+	 */
+	@Untested
 	public void updateAndUpload(String uuid, String token, SkinType skinType, String file) {
 		try {
 			Unirest.put("https://api.mojang.com/user/profile/" + uuid + "/skin").header("Authorization", "Bearer " + token).field("model", skinType.toString().equals("") ? "alex" : skinType.toString()).field("file", file).asString();
@@ -95,7 +167,13 @@ public class Mojang {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Resets the skin to the default.
+	 *
+	 * @param uuid the UUID of the player
+	 * @param token the token used for API authentication
+	 */
 	public void resetSkin(String uuid, String token) {
 		try {
 			Unirest.delete("https://api.mojang.com/user/profile/" + uuid + "/skin").header("Authorization", "Bearer " + token).asString();
@@ -103,7 +181,13 @@ public class Mojang {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * <p>Returns a list of blacklisted hostnames, belonging to servers that were blocked due to Mojang's EULA infringement.
+	 * <p><strong>N.B.:</strong> These may not be in human friendly form as they were hashed. You may want to use third-party services to obtain an (unofficial) list.
+	 *
+	 * @return a {@link java.util.List List} of all the blocked hostnames
+	 */
 	public List<String> getServerBlacklist() {
 		try {
 			return Arrays.asList(Unirest.get("https://sessionserver.mojang.com/blockedservers").asString().getBody().split("\n"));
@@ -112,7 +196,14 @@ public class Mojang {
 			return null;
 		}
 	}
-	
+
+	/**
+	 * Returns the official mojang's product sales statistics.
+	 *
+	 * @param options the query {@link org.shanerx.mojang.SalesStats.Options options}
+	 * @return the stats
+	 */
+	@Untested
 	public SalesStats getSaleStatistics(SalesStats.Options...options) {
 		JSONArray arr = new JSONArray();
 		Collections.addAll(arr, options);
@@ -126,7 +217,10 @@ public class Mojang {
 		}
 		return stats;
 	}
-	
+
+	/**
+	 * This enum represents the possible Mojang API servers availability statuses.
+	 */
 	public enum ServiceStatus {
 		
 		RED,
@@ -134,7 +228,10 @@ public class Mojang {
 		GREEN,
 		UNKNOWN
 	}
-	
+
+	/**
+	 * This enum represents the various portions of the Mojang API.
+	 */
 	public enum ServiceType {
 		
 		MINECRAFT_NET,
@@ -147,23 +244,44 @@ public class Mojang {
 		API_MOJANG_COM,
 		TEXTURES_MINECRAFT_NET,
 		MOJANG_COM;
-		
+
+		/**
+		 * <p>This method overrides {@code java.lang.Object.toString()} and returns the address of the mojang api portion a certain enum constant represents.
+		 * <p><strong>Example:</strong>
+		 * {@code org.shanerx.mojang.Mojang.ServiceType.MINECRAFT_NET.toString()} will return {@literal minecraft.net}
+		 *
+		 * @return the string
+		 */
 		@Override
 		public String toString() {
 			return name().toLowerCase().replace("_", ".");
 		}
 	}
-	
+
+	/**
+	 * This enum represents the skin types "Alex" and "Steve".
+	 */
 	public enum SkinType {
+		/**
+		 * Steve
+		 */
 		DEFAULT,
+		/**
+		 * Alex
+		 */
 		SLIM;
-		
+
+		/**
+		 * Returns the query parameter version for these skin types in order to send HTTP requests to the API.
+		 *
+		 * @return the string
+		 */
 		@Override
 		public String toString() {
 			return this == DEFAULT ? "" : "slim";
 		}
 	}
-	
+
 	private static JSONObject getJSONObject(String url) {
 		JSONObject obj = null;
 		try {
