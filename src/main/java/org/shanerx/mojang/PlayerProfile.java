@@ -19,12 +19,18 @@ package org.shanerx.mojang;
 import java.util.Set;
 
 @SuppressWarnings("unused")
+/**
+ * This class contains the fields that represent the metadata of a player account and the methods to interact with it.
+ */
 public class PlayerProfile {
 
 	private String uuid;
 	private String username;
 	private Set<Property> properties;
-	
+
+	/**
+	 * Represents a property.
+	 */
 	public static class Property {
 		String name;
 		String value;
@@ -42,7 +48,15 @@ public class PlayerProfile {
 			return signature;
 		}
 	}
-	
+
+	/**
+	 * <p>Constructor for the class.
+	 * <p>You may use {@code new Mojang().connect().getPlayerProfile(uuid)} to retrieve the instance as it will verify the validity of the parameters.
+	 *
+	 * @param uuid the UUID of the player this object should represent
+	 * @param username the username of said player (you may use {@code new Mojang().connect().getNameHistoryOfPlayer(uuid)} to retrieve it).
+	 * @param properties the properties for that player. Depends on what you wish to do with the object
+	 */
 	public PlayerProfile(String uuid, String username, Set<Property> properties) {
 		this.uuid = uuid;
 		this.username = username;
