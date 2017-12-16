@@ -17,6 +17,9 @@
 package org.shanerx.mojang;
 
 @SuppressWarnings("unused")
+/**
+ * This class is used for retrieving information from the Mojang store.
+ */
 public class SalesStats {
 
 	private int total;
@@ -28,25 +31,48 @@ public class SalesStats {
 		this.last24hrs = last24hrs;
 		this.salesPerSec = salesPerSec;
 	}
-	
+
+	/**
+	 * Gets the total amount of sales over time.
+	 *
+	 * @return all the sales made
+	 */
 	public int getTotal() {
 		return total;
 	}
-	
+
+	/**
+	 * Gets the sales made within the last 24 hours.
+	 *
+	 * @return the sales made today
+	 */
 	public int getLast24hrs() {
 		return last24hrs;
 	}
-	
+
+	/**
+	 * Gets the sale rate, aka the average amount of sales in a second.
+	 *
+	 * @return the mean sale rate
+	 */
 	public int getSaleVelocityPerSeconds() {
 		return salesPerSec;
 	}
-	
+
+	/**
+	 * This enum represents the possible options for the shop-API query.
+	 */
 	public enum Options {
 		ITEM_SOLD_MINECRAFT,
 		PREPAID_CARD_REDEEMED_MINECRAFT,
 		ITEM_SOLD_COBALT,
 		ITEM_SOLD_SCROLLS;
-		
+
+		/**
+		 * Returns the string version of this enum, to be used when querying the API.
+		 *
+		 * @return the string
+		 */
 		@Override
 		public String toString() {
 			return name().toLowerCase();
