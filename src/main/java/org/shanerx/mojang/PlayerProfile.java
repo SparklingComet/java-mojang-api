@@ -18,10 +18,10 @@ package org.shanerx.mojang;
 
 import java.util.Set;
 
-@SuppressWarnings("unused")
 /**
  * This class contains the fields that represent the metadata of a player account and the methods to interact with it.
  */
+@SuppressWarnings("unused")
 public class PlayerProfile {
 
 	private String uuid;

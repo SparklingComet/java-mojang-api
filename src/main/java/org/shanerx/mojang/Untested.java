@@ -18,10 +18,10 @@ package org.shanerx.mojang;
 
 import java.lang.annotation.Documented;
 
-@Documented
 /**
  * This annotation is applied to methods that were not tested enough to be considered stable.
  * If you encounter any issues using them, please make sure to report them.
  */
+@Documented
 public @interface Untested {
 }

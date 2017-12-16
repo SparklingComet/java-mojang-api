@@ -16,10 +16,10 @@
 
 package org.shanerx.mojang;
 
-@SuppressWarnings("unused")
 /**
  * This class is used for retrieving information from the Mojang store.
  */
+@SuppressWarnings("unused")
 public class SalesStats {
 
 	private int total;

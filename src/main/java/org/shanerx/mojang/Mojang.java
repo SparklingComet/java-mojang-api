@@ -31,12 +31,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@SuppressWarnings({"unused", "unchecked"})
 /**
  * <p>This class represents the connection with the Mojang API.
  * <p>All instances of other classes of this wrapper API should be retrieved through this class.
  * <p>Remember to call <code>api.connect()</code> after creating an instance of this class.
  */
+@SuppressWarnings({"unused", "unchecked"})
 public class Mojang {
 	
 	private Map<String, ServiceStatus> apiStatus;
@@ -100,6 +100,7 @@ public class Mojang {
 
 	/**
 	 * Retrieves all the username a certain UUID has had in the past, including the current one.
+	 *
 	 * @param uuid the UUID
 	 * @return a map with the username as key value and the Timestamp as a {@link java.lang.Long Long}
 	 */
