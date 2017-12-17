@@ -5,9 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.shanerx</groupId>
-    <artifactId>mojangapi</artifactId>
+    <artifactId>java-mojang-api</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <url>http://maven.apache.org</url>
+    <url>http://wiki.vg/Mojang_API</url>
+    <name>Java Mojang API</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -57,9 +58,9 @@
             <configuration>
                 <archive>
                 </archive>
-                <descriptorRefs>
+                <!--<descriptorRefs>
                     <descriptorRef>-with-dependencies</descriptorRef>
-                </descriptorRefs>
+                </descriptorRefs>-->
             </configuration>
         </plugin>
     </plugins>
