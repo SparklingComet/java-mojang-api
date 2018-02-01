@@ -64,8 +64,9 @@ if (api.getStatus(Mojang.ServiceType.AUTH_MOJANG_COM) != Mojang.ServiceStatus.GR
 to check whether authentication servers are currently down.
 
 ## Documentation
-Javadocs are available for download in HTML-format in the `docs/` directory.
-We will make them available online soon.
+* Generated HTML-Javadoc files are available for download in HTML-format in the `docs/` directory.
+* You may also use the live version ([click](https://sparklingcomet.github.io/java-mojang-api/index.html))
+
 
 ## License
 The project is licensed under the Apache License v2.0 ([view](https://github.com/SparklingComet/java-mojang-api/blob/master/LICENSE)).
