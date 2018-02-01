@@ -57,7 +57,7 @@ Mojang api = new Mojang().connect();
 ```
 You can ping the api like this:
 ```java
-if (api.getStatus(Mojang.ServiceType.AUTH_MOJANG_COM != Mojang.ServiceStatus.GREEN) {
+if (api.getStatus(Mojang.ServiceType.AUTH_MOJANG_COM) != Mojang.ServiceStatus.GREEN) {
 	System.err.println("The Auth Server is not available right now.");
 }
 ```
