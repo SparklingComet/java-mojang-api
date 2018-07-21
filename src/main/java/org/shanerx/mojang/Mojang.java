@@ -342,7 +342,7 @@ public class Mojang
                     case "IllegalArgumentException":
                         throw new IllegalArgumentException((String) obj.get("errorMessage"));
                     default:
-                        throw new RuntimeException();
+                        throw new RuntimeException(err);
                 }
             }
         }
