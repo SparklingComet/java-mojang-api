@@ -56,9 +56,11 @@ public class Mojang
      */
     public Mojang connect()
     {
-        JSONObject obj = getJSONObject("https://status.mojang.com/check");
-        obj.forEach((k, v) -> apiStatus.put((String) k, ServiceStatus.valueOf((String) v)));
-        return this;
+        JSONArray arr = getJSONArray("https://status.mojang.com/check");
+        for (int i = 0; i <= 7; ++i) {
+            apiStatus.put(ServiceType.values(i).toString(), ServiceStatus.valueOf(arr.get(i).get(ServiceType.values()[i].toString()).toUpperCase()));
+        }
+        
     }
 
     /**
@@ -271,9 +273,7 @@ public class Mojang
 
         MINECRAFT_NET,
         SESSION_MINECRAFT_NET,
-        ACCOUNT_MOJANG_NET,
-        AUTH_MOJANG_COM,
-        SKINS_MINECRAFT_NET,
+        ACCOUNT_MOJANG_COM,
         AUTHSERVER_MOJANG_COM,
         SESSIONSERVER_MOJANG_COM,
         API_MOJANG_COM,
