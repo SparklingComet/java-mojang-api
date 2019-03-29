@@ -16,17 +16,20 @@
 
 package org.shanerx.mojang;
 
+import java.net.URL;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
  * This class contains the fields that represent the metadata of a player account and the methods to interact with it.
  */
-@SuppressWarnings("unused")
 public class PlayerProfile {
 
 	private String uuid;
 	private String username;
 	private Set<Property> properties;
+	private Optional<TexturesProperty> textures;
 
 	/**
 	 * Represents a property.
@@ -48,6 +51,41 @@ public class PlayerProfile {
 			return signature;
 		}
 	}
+	
+	public static class TexturesProperty extends Property {
+		long timestamp;
+		String profileId, profileName;
+		boolean signatureRequired = false;
+		Map<String, URL> textures;
+		
+		public long getTimestamp() {
+			return timestamp;
+		}
+
+		public String getProfileId() {
+			return profileId;
+		}
+
+		public String getProfileName() {
+			return profileName;
+		}
+
+		public boolean isSignatureRequired() {
+			return signatureRequired;
+		}
+
+		public Map<String, URL> getTextures() {
+			return textures;
+		}
+
+		public Optional<URL> getSkin() {
+			return Optional.ofNullable(textures.get("SKIN"));
+		}
+		
+		public Optional<URL> getCape() {
+			return Optional.ofNullable(textures.get("CAPE"));
+		}
+	}
 
 	/**
 	 * <p>Constructor for the class.
@@ -61,6 +99,7 @@ public class PlayerProfile {
 		this.uuid = uuid;
 		this.username = username;
 		this.properties = properties;
+		this.textures = properties.stream().filter(p -> p.getName().equals("textures")).map(p -> (TexturesProperty) p).findAny();
 	}
 
 	/**
@@ -89,5 +128,9 @@ public class PlayerProfile {
 	 */
 	public Set<Property> getProperties() {
 		return properties;
+	}
+	
+	public Optional<TexturesProperty> getTextures() {
+		return textures;
 	}
 }
