@@ -16,22 +16,33 @@
 
 package org.shanerx.mojang;
 
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.apache.commons.codec.binary.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 /**
  * <p>This class represents the connection with the Mojang API.
  * <p>All instances of other classes of this wrapper API should be retrieved through this class.
  * <p>Remember to call <code>api.connect()</code> after creating an instance of this class.
  */
-@SuppressWarnings({ "unused", "unchecked" })
+@SuppressWarnings({ "unchecked" })
 public class Mojang
 {
 
@@ -136,19 +147,46 @@ public class Mojang
      *
      * @param uuid the UUID of the player
      *
-     * @return the {@link org.shanerx.mojang.PlayerProfile PlayerProfile} object}
-     */
-    public PlayerProfile getPlayerProfile(String uuid)
-    {
-        JSONObject obj  = getJSONObject("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid);
-        String     name = (String) obj.get("name");
-        Set<PlayerProfile.Property> properties = (Set<PlayerProfile.Property>) ((JSONArray) obj.get("properties")).stream().map(o ->
-        {
-            PlayerProfile.Property p    = new PlayerProfile.Property();
-            JSONObject             prop = (JSONObject) o;
-            p.name = (String) prop.get("name");
-            p.signature = (String) prop.get("signature");
-            p.value = (String) prop.get("value");
+	 * @return the {@link org.shanerx.mojang.PlayerProfile PlayerProfile} object}
+	 */
+	public PlayerProfile getPlayerProfile(String uuid) {
+		JSONObject obj = getJSONObject("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid);
+		String name = (String) obj.get("name");
+		Set<PlayerProfile.Property> properties = (Set<PlayerProfile.Property>) ((JSONArray) obj.get("properties")).stream().map(o -> {
+			PlayerProfile.Property p;
+			JSONObject prop = (JSONObject) o;
+
+			String propName = (String) prop.get("name");
+			String propValue = (String) prop.get("value");
+			if (propName.equals("textures")) {
+				JSONObject tex;
+				try {
+					tex = (JSONObject) new JSONParser().parse(new String(Base64.decodeBase64(propValue)));
+				} catch (ParseException e2) {
+					/* Don't blame me, I just follow the pattern from #getJSONObject */
+					throw new RuntimeException(e2);
+				}
+				PlayerProfile.TexturesProperty q = new PlayerProfile.TexturesProperty();
+				q.timestamp = (Long) tex.get("timestamp");
+				q.profileId = (String) tex.get("profileId");
+				q.profileName = (String) tex.get("profileName");
+				q.signatureRequired = Boolean.parseBoolean((String) tex.get("signatureRequired"));
+				q.textures = ((Stream<Entry<Object, Object>>) ((JSONObject) tex.get("textures")).entrySet().stream()).collect(Collectors.toMap(
+						e -> (String) e.getKey(),
+						e -> {
+							try {
+								return new URL((String) ((JSONObject) e.getValue()).get("url"));
+							} catch (MalformedURLException e1) {
+								/* I want lambdas with exceptions in Java, *please* */
+								throw new RuntimeException("Wrapper for checked exception for lambda", e1);
+							}
+						}));
+				p = q;
+			} else
+				p = new PlayerProfile.Property();
+			p.name = propName;
+			p.signature = (String) prop.get("signature");
+			p.value = propValue;
             return p;
         }).collect(Collectors.toSet());
         return new PlayerProfile(uuid, name, properties);
