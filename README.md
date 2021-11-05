@@ -54,14 +54,7 @@ dependencies {
 Once you have imported the library, use the following to establish a connection with Mojang's servers.
 ```java
 Mojang api = new Mojang().connect();
-```
-You can ping the api like this:
-```java
-if (api.getStatus(Mojang.ServiceType.AUTH_MOJANG_COM) != Mojang.ServiceStatus.GREEN) {
-	System.err.println("The Auth Server is not available right now.");
-}
-```
-to check whether authentication servers are currently down.
+```      
 
 ## Documentation
 * Generated HTML-Javadoc files are available for download in HTML-format in the `docs/` directory.

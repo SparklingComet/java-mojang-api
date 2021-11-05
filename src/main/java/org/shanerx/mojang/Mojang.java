@@ -44,17 +44,12 @@ import com.mashape.unirest.http.exceptions.UnirestException;
  */
 @SuppressWarnings({ "unchecked" })
 public class Mojang
-{
-
-    private Map<String, ServiceStatus> apiStatus;
+{    
 
     /**
      * Constructor. Initializes member variables.
      */
-    public Mojang()
-    {
-        apiStatus = new HashMap<>();
-    }
+    public Mojang() {}
 
     /**
      * <p>Opens the connection with the Mojang API.
@@ -67,35 +62,18 @@ public class Mojang
      */
     public Mojang connect()
     {
-        JSONArray arr = getJSONArray("https://status.mojang.com/check");
-
-        for (int i = 0; i <= 7; ++i) {
-            ServiceType st = ServiceType.values()[i];
-            String service = st.toString();
-            JSONObject obj = (JSONObject) arr.get(i);
-
-            apiStatus.put(service,
-                    ServiceStatus.valueOf(((String) obj.get(service)).toUpperCase()));
-        }
-
         return this;
     }
 
     /**
-     * Retrieves the {@link org.shanerx.mojang.Mojang.ServiceStatus status} of a portion of the API.
-     * Check the enum entries for {@link org.shanerx.mojang.Mojang.ServiceStatus} for possible response types.
-     *
-     * @param service the service type
-     *
-     * @return the status of said service
+     * @deprecated This service was closed down by Mojang on October 8th 2021 due to incorrect status responses.
+     * https://wiki.vg/Mojang_API#API_Status_-_Outdated
+     *  
+     * https://bugs.mojang.com/browse/WEB-2303?focusedCommentId=1086543&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-1086543
      */
     public ServiceStatus getStatus(ServiceType service)
-    {
-        if (service == null)
-        {
-            return ServiceStatus.UNKNOWN;
-        }
-        return apiStatus.get(service.toString());
+    {       
+    	return ServiceStatus.UNKNOWN;        
     }
 
     /**
